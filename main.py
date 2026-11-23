@@ -169,9 +169,13 @@ def main():
 
     # --- save ---
     here = os.path.dirname(os.path.abspath(__file__))
-    img.save(os.path.join(here, "entry.png"), "PNG", optimize=True)
-    if os.path.isdir("/output"):
-        img.save("/output/entry.png", "PNG", optimize=True)
+    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
+    if os.path.isdir(out_dir):
+        img.save(os.path.join(out_dir, "entry.png"), "PNG", optimize=True)
+    try:
+        img.save(os.path.join(here, "entry.png"), "PNG", optimize=True)
+    except OSError:
+        pass  # /bot is read-only in the grader; the /output copy is the artifact
     print("wrote entry.png", img.size)
 
 
